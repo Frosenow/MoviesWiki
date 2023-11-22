@@ -21,6 +21,7 @@ export function MovieCardExtended({ movie }) {
   return (
     <Card
       sx={{
+        width: "80%",
         height: "100%",
         display: "flex",
         flexDirection: "column",

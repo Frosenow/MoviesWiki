@@ -57,15 +57,6 @@ export default function Home() {
 
   return (
     <>
-      <CssBaseline />
-      <AppBar position="relative">
-        <Toolbar>
-          <MovieIcon sx={{ mr: 2 }} />
-          <Typography variant="h6" color="inherit" noWrap>
-            MovieMatrix
-          </Typography>
-        </Toolbar>
-      </AppBar>
       <Box
         sx={{
           bgcolor: "background.paper",
