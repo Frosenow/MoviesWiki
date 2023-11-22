@@ -79,7 +79,7 @@ export default function Home() {
   }, [selectedGenre, page]);
 
   return (
-    <>
+    <Container>
       <Box
         sx={{
           bgcolor: "background.paper",
@@ -116,35 +116,36 @@ export default function Home() {
           </Stack>
         </Container>
       </Box>
-      <InfiniteScroll
-        dataLength={movies.length}
-        next={() => setPage((prevPage) => prevPage + 1)}
-        hasMore={hasMore}
-        loader={<LinearProgress color="secondary" />}
-        endMessage={
-          <Box sx={{ bgcolor: "background.paper", p: 6 }} component="footer">
-            <Typography
-              variant="subtitle1"
-              align="center"
-              color="text.secondary"
-              component="p"
-            >
-              You have reached the end of our movie database!
-            </Typography>
-            <Copyright />
-          </Box>
-        }
-      >
-        <Container sx={{ py: 8 }} maxWidth="md">
-          <Grid container spacing={4}>
-            {movies.map((movie, idx) => (
-              <Grid item key={idx} xs={12} sm={6} md={4}>
-                <MovieCard movie={movie} />
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </InfiniteScroll>
-    </>
+      <Container>
+        <InfiniteScroll
+          dataLength={movies.length}
+          next={() => setPage((prevPage) => prevPage + 1)}
+          hasMore={hasMore}
+          endMessage={
+            <Box sx={{ bgcolor: "background.paper", p: 6 }} component="footer">
+              <Typography
+                variant="subtitle1"
+                align="center"
+                color="text.secondary"
+                component="p"
+              >
+                You have reached the end of our movie database!
+              </Typography>
+              <Copyright />
+            </Box>
+          }
+        >
+          <Container sx={{ py: 8 }} maxWidth="md">
+            <Grid container spacing={4}>
+              {movies.map((movie, idx) => (
+                <Grid item key={idx} xs={12} sm={6} md={4}>
+                  <MovieCard movie={movie} />
+                </Grid>
+              ))}
+            </Grid>
+          </Container>
+        </InfiniteScroll>
+      </Container>
+    </Container>
   );
 }
