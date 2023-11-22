@@ -9,11 +9,25 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import { LinearProgress, Link } from "@mui/material";
 import MovieIcon from "@mui/icons-material/Movie";
 
 import { MovieCard } from "../Card/MovieCard";
 
 const SERVER_URL = "http://localhost:5000";
+
+function Copyright() {
+  return (
+    <Typography variant="body2" color="text.secondary" align="center">
+      {"Copyright © "}
+      <Link color="inherit" href="https://mui.com/">
+        Filip Potepa
+      </Link>{" "}
+      {new Date().getFullYear()}
+      {"."}
+    </Typography>
+  );
+}
 
 export default function Home() {
   const [movies, setMovies] = useState([]);
@@ -48,7 +62,7 @@ export default function Home() {
         <Toolbar>
           <MovieIcon sx={{ mr: 2 }} />
           <Typography variant="h6" color="inherit" noWrap>
-            MoviesWiki
+            MovieMatrix
           </Typography>
         </Toolbar>
       </AppBar>
@@ -67,7 +81,7 @@ export default function Home() {
             color="text.primary"
             gutterBottom
           >
-            Album layout
+            Movie Matrix
           </Typography>
           <Typography
             variant="h5"
@@ -75,9 +89,8 @@ export default function Home() {
             color="text.secondary"
             paragraph
           >
-            Something short and leading about the collection below—its contents,
-            the creator, etc. Make it short and sweet, but not too short so
-            folks don&apos;t simply skip over it entirely.
+            Navigate through the world of cinema with detailed insights and
+            summaries.
           </Typography>
           <Stack
             sx={{ pt: 4 }}
@@ -94,14 +107,26 @@ export default function Home() {
         dataLength={movies.length}
         next={() => setPage((prevPage) => prevPage + 1)}
         hasMore={hasMore}
-        loader={<h1>Loading...</h1>}
-        endMessage={<p>You went to the end</p>}
+        loader={<LinearProgress color="secondary" />}
+        endMessage={
+          <Box sx={{ bgcolor: "background.paper", p: 6 }} component="footer">
+            <Typography
+              variant="subtitle1"
+              align="center"
+              color="text.secondary"
+              component="p"
+            >
+              You have reached the end of our movie database!
+            </Typography>
+            <Copyright />
+          </Box>
+        }
       >
         <Container sx={{ py: 8 }} maxWidth="md">
           <Grid container spacing={4}>
             {movies.map((movie) => (
               <Grid item key={movie} xs={12} sm={6} md={4}>
-                <MovieCard />
+                <MovieCard movie={movie} />
               </Grid>
             ))}
           </Grid>
