@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
@@ -7,9 +7,10 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { LinearProgress, Link } from "@mui/material";
-import TuneIcon from "@mui/icons-material/Tune";
 
+import { MovieContext } from "../../context/MovieContext";
 import { MovieCard } from "../Card/MovieCard";
+import AutocompleteFilter from "../Autocomplete/AutocompleteFilter";
 import { SERVER_URL } from "../../../config";
 
 function Copyright() {
@@ -29,6 +30,7 @@ export default function Home() {
   const [movies, setMovies] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const { selectedGenre } = useContext(MovieContext);
   const RESPONSE_LIMIT = 9;
 
   async function getMovies() {
@@ -47,9 +49,27 @@ export default function Home() {
     }
   }
 
+  async function getGenre() {
+    try {
+      const genre = await fetch(
+        `${SERVER_URL}/movies/filter?filterType=${selectedGenre.genre_name}`
+      ).then((genre) => genre.json());
+
+      console.log(genre);
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
+  useEffect(() => {
+    if (selectedGenre) {
+      getGenre();
+    }
+  }, [selectedGenre]);
+
   useEffect(() => {
     getMovies();
-  }, [page]);
+  }, [page, selectedGenre]);
 
   return (
     <>
@@ -86,9 +106,7 @@ export default function Home() {
             justifyContent="center"
           >
             <Button variant="contained">Main call to action</Button>
-            <Button variant="outlined" startIcon={<TuneIcon />}>
-              Filter
-            </Button>
+            <AutocompleteFilter />
           </Stack>
         </Container>
       </Box>

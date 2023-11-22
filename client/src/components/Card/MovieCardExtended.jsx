@@ -16,9 +16,11 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import InfoIcon from "@mui/icons-material/Info";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
+import ExpandableTable from "../ExpandableTable/ExpandableTable";
+
 export function MovieCardExtended({ movie, cast }) {
   const navigate = useNavigate();
-  console.log(cast);
+
   return (
     <Container sx={{ mt: "1rem" }}>
       <Card
@@ -96,6 +98,7 @@ export function MovieCardExtended({ movie, cast }) {
               </Chip>
             )}
           </Stack>
+          <ExpandableTable data={cast} />
         </CardContent>
         <CardActions>
           <Button

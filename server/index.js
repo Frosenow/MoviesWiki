@@ -13,12 +13,46 @@ app.use(express.json());
 app.get("/movies", async (req, res) => {
   const { page, limit } = req.query || 1;
   const offset = (page - 1) * limit;
+
   try {
     const movies = await pool.query(
       "SELECT * FROM movies.movie LIMIT $1 OFFSET $2",
       [limit, offset]
     );
     res.json(movies.rows);
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+app.get("/movies/filter", async (req, res) => {
+  const { filterType } = req.query;
+  try {
+    const filteredMovies = await pool.query(
+      `SELECT
+    m.movie_id,
+    m.title,
+    g.genre_name
+  FROM
+    movies.movie m
+  JOIN movies.movie_genres mg ON m.movie_id = mg.movie_id
+  JOIN movies.genre g ON mg.genre_id = g.genre_id
+  WHERE
+    g.genre_name = $1;`,
+      [filterType]
+    );
+    res.json(filteredMovies.rows);
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+app.get("/genres", async (req, res) => {
+  try {
+    const genres = await pool.query(
+      "SELECT * FROM movies.genre ORDER BY genre_name"
+    );
+    res.json(genres.rows);
   } catch (error) {
     console.error(error.message);
   }
@@ -55,41 +89,6 @@ app.get("/movies/:id", async (req, res) => {
     console.error(error.message);
   }
 });
-
-// app.get("movie/cast/:id", async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const cast = await pool.query(
-//       `SELECT
-//         p.person_name,
-//         mc.character_name
-//       FROM
-//         movies.movie_cast mc
-//       JOIN movies.person p ON mc.person_id = p.person_id
-//       WHERE
-//         mc.movie_id = $1
-//       ORDER BY
-//         mc.cast_order;`,
-//       [id]
-//     );
-//     res.json(cast.rows);
-//   } catch (error) {
-//     console.error(error.message);
-//   }
-// });
-
-// app.get("/movies/filter:filterType", async (req, res) => {
-//   try {
-//     const { filterType } = req.params;
-//     const movies = await pool.query(
-//       "SELECT m.movie_id, m.title, g.genre_name FROM movies.movie m JOIN movies.movie_genres mg ON m.movie_id = mg.movie_id JOIN movies.genre g ON mg.genre_id = g.genre_id WHERE g.genre_name = $1",
-//       [filterType]
-//     );
-//     res.json(movies.rows);
-//   } catch (error) {
-//     console.error(error.message);
-//   }
-// });
 
 // Start server
 app.listen(PORT, () => {
