@@ -10,11 +10,11 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { LinearProgress, Link } from "@mui/material";
+import TuneIcon from "@mui/icons-material/Tune";
 import MovieIcon from "@mui/icons-material/Movie";
 
 import { MovieCard } from "../Card/MovieCard";
-
-const SERVER_URL = "http://localhost:5000";
+import { SERVER_URL } from "../../../config";
 
 function Copyright() {
   return (
@@ -99,7 +99,9 @@ export default function Home() {
             justifyContent="center"
           >
             <Button variant="contained">Main call to action</Button>
-            <Button variant="outlined">Secondary action</Button>
+            <Button variant="outlined" startIcon={<TuneIcon />}>
+              Filter
+            </Button>
           </Stack>
         </Container>
       </Box>

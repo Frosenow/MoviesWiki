@@ -1,5 +1,6 @@
-import moment from "moment";
+/* eslint-disable react/prop-types */
 import { useNavigate } from "react-router-dom";
+import moment from "moment";
 import {
   Card,
   CardContent,
@@ -7,17 +8,16 @@ import {
   Typography,
   Button,
   Stack,
-  Container,
 } from "@mui/material";
 import Chip from "@mui/joy/Chip";
 import StarIcon from "@mui/icons-material/Star";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import InfoIcon from "@mui/icons-material/Info";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import React from "react";
 
 export function MovieCard({ movie }) {
   const navigate = useNavigate();
+
   return (
     <Card
       sx={{
