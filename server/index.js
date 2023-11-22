@@ -26,20 +26,21 @@ app.get("/movies", async (req, res) => {
 });
 
 app.get("/movies/filter", async (req, res) => {
-  const { filterType } = req.query;
+  const { page, limit, filterType } = req.query || 1;
+  const offset = (page - 1) * limit;
   try {
     const filteredMovies = await pool.query(
       `SELECT
-    m.movie_id,
-    m.title,
-    g.genre_name
-  FROM
-    movies.movie m
-  JOIN movies.movie_genres mg ON m.movie_id = mg.movie_id
-  JOIN movies.genre g ON mg.genre_id = g.genre_id
-  WHERE
-    g.genre_name = $1;`,
-      [filterType]
+      m.*,
+      g.genre_name
+    FROM
+      movies.movie m
+    JOIN movies.movie_genres mg ON m.movie_id = mg.movie_id
+    JOIN movies.genre g ON mg.genre_id = g.genre_id
+    WHERE
+      g.genre_name = $1
+    LIMIT $2 OFFSET $3;;`,
+      [filterType, limit, offset]
     );
     res.json(filteredMovies.rows);
   } catch (error) {

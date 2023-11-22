@@ -43,7 +43,7 @@ export default function Home() {
         setHasMore(false);
       }
 
-      setMovies((prev) => [...prev, ...moviesData]);
+      setMovies([...moviesData]);
     } catch (error) {
       console.error(error.message);
     }
@@ -52,10 +52,10 @@ export default function Home() {
   async function getGenre() {
     try {
       const genre = await fetch(
-        `${SERVER_URL}/movies/filter?filterType=${selectedGenre.genre_name}`
+        `${SERVER_URL}/movies/filter?filterType=${selectedGenre.genre_name}&page=${page}&limit=${RESPONSE_LIMIT}`
       ).then((genre) => genre.json());
 
-      console.log(genre);
+      setMovies([...genre]);
     } catch (error) {
       console.error(error.message);
     }
@@ -64,12 +64,10 @@ export default function Home() {
   useEffect(() => {
     if (selectedGenre) {
       getGenre();
+    } else {
+      getMovies();
     }
-  }, [selectedGenre]);
-
-  useEffect(() => {
-    getMovies();
-  }, [page, selectedGenre]);
+  }, [selectedGenre, page]);
 
   return (
     <>

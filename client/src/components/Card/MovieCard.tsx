@@ -1,5 +1,6 @@
-import moment from "moment";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import moment from "moment";
 import {
   Card,
   CardContent,
@@ -7,16 +8,18 @@ import {
   Typography,
   Button,
   Stack,
-  Container,
 } from "@mui/material";
 import Chip from "@mui/joy/Chip";
 import StarIcon from "@mui/icons-material/Star";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import InfoIcon from "@mui/icons-material/Info";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+
+import { MovieContext } from "../../context/MovieContext";
 import React from "react";
 
 export function MovieCard({ movie }) {
+  const { selectedGenre } = useContext(MovieContext);
   const navigate = useNavigate();
   return (
     <Card
