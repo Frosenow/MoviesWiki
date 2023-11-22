@@ -7,21 +7,28 @@ import { SERVER_URL } from "../../../config";
 export default function Movie() {
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
+  const [cast, setCast] = useState(null);
 
-  async function getMovie() {
+  async function getMovieInfo() {
     try {
-      const movieData = await fetch(`${SERVER_URL}/movies/${movieId}`).then(
-        (movieData) => movieData.json()
-      );
+      let [movieData, movieCast] = await Promise.all([
+        fetch(`${SERVER_URL}/movies/${movieId}`).then((res) => res.json()),
+        fetch(`${SERVER_URL}/movies/${movieId}?cast=true`).then((res) =>
+          res.json()
+        ),
+      ]);
       setMovie(...movieData);
+      setCast(movieCast);
     } catch (error) {
       console.error(error.message);
     }
   }
 
   useEffect(() => {
-    getMovie();
-  }, []);
+    if (movieId) {
+      getMovieInfo();
+    }
+  }, [movieId]);
 
-  return movie && <MovieCardExtended movie={movie} />;
+  return movie && <MovieCardExtended movie={movie} cast={cast} />;
 }

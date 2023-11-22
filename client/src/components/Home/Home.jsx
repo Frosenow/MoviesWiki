@@ -1,17 +1,13 @@
 import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { LinearProgress, Link } from "@mui/material";
 import TuneIcon from "@mui/icons-material/Tune";
-import MovieIcon from "@mui/icons-material/Movie";
 
 import { MovieCard } from "../Card/MovieCard";
 import { SERVER_URL } from "../../../config";

@@ -9,8 +9,6 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// ZROBIC PROSTA MOVIE WIKI ZEBY SIE DALO DODAWAC FILMY, USUWAC, PRZEGLADAC PO WIECEJ INFORMACJI I AKTUALIZOWAC
-
 //Routes
 app.get("/movies", async (req, res) => {
   const { page, limit } = req.query || 1;
@@ -27,8 +25,27 @@ app.get("/movies", async (req, res) => {
 });
 
 app.get("/movies/:id", async (req, res) => {
+  const { cast } = req.query;
   try {
     const { id } = req.params;
+
+    if (cast) {
+      const cast = await pool.query(
+        `SELECT
+          p.person_name,
+          mc.character_name
+        FROM
+          movies.movie_cast mc
+        JOIN movies.person p ON mc.person_id = p.person_id
+        WHERE
+          mc.movie_id = $1
+        ORDER BY
+          mc.cast_order;`,
+        [id]
+      );
+      res.json(cast.rows);
+    }
+
     const movie = await pool.query(
       "SELECT * FROM movies.movie WHERE movie_id = $1",
       [id]
@@ -38,6 +55,41 @@ app.get("/movies/:id", async (req, res) => {
     console.error(error.message);
   }
 });
+
+// app.get("movie/cast/:id", async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const cast = await pool.query(
+//       `SELECT
+//         p.person_name,
+//         mc.character_name
+//       FROM
+//         movies.movie_cast mc
+//       JOIN movies.person p ON mc.person_id = p.person_id
+//       WHERE
+//         mc.movie_id = $1
+//       ORDER BY
+//         mc.cast_order;`,
+//       [id]
+//     );
+//     res.json(cast.rows);
+//   } catch (error) {
+//     console.error(error.message);
+//   }
+// });
+
+// app.get("/movies/filter:filterType", async (req, res) => {
+//   try {
+//     const { filterType } = req.params;
+//     const movies = await pool.query(
+//       "SELECT m.movie_id, m.title, g.genre_name FROM movies.movie m JOIN movies.movie_genres mg ON m.movie_id = mg.movie_id JOIN movies.genre g ON mg.genre_id = g.genre_id WHERE g.genre_name = $1",
+//       [filterType]
+//     );
+//     res.json(movies.rows);
+//   } catch (error) {
+//     console.error(error.message);
+//   }
+// });
 
 // Start server
 app.listen(PORT, () => {
