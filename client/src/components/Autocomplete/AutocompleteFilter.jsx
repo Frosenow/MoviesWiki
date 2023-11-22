@@ -34,6 +34,7 @@ export default function AutocompleteFilter() {
         onChange={(_, genre) => {
           setSelectedGenre(genre);
         }}
+        value={selectedGenre}
         sx={{ width: 300 }}
         renderInput={(params) => (
           <TextField

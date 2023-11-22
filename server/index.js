@@ -39,7 +39,7 @@ app.get("/movies/filter", async (req, res) => {
     JOIN movies.genre g ON mg.genre_id = g.genre_id
     WHERE
       g.genre_name = $1
-    LIMIT $2 OFFSET $3;;`,
+    LIMIT $2 OFFSET $3`,
       [filterType, limit, offset]
     );
     res.json(filteredMovies.rows);

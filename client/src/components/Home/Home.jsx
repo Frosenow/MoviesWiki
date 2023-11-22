@@ -1,6 +1,5 @@
 import { useEffect, useState, useContext } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
@@ -17,7 +16,7 @@ function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
+      <Link color="inherit" href="https://github.com/Frosenow">
         Filip Potepa
       </Link>{" "}
       {new Date().getFullYear()}
@@ -43,7 +42,7 @@ export default function Home() {
         setHasMore(false);
       }
 
-      setMovies([...moviesData]);
+      setMovies((prevMovies) => [...prevMovies, ...moviesData]);
     } catch (error) {
       console.error(error.message);
     }
@@ -52,14 +51,24 @@ export default function Home() {
   async function getGenre() {
     try {
       const genre = await fetch(
-        `${SERVER_URL}/movies/filter?filterType=${selectedGenre.genre_name}&page=${page}&limit=${RESPONSE_LIMIT}`
+        `${SERVER_URL}/movies/filter?page=${page}&limit=${RESPONSE_LIMIT}&filterType=${selectedGenre.genre_name}`
       ).then((genre) => genre.json());
 
-      setMovies([...genre]);
+      if (genre.length === 0 || genre.length < RESPONSE_LIMIT) {
+        setHasMore(false);
+      }
+
+      setMovies((prevMovies) => [...prevMovies, ...genre]);
     } catch (error) {
       console.error(error.message);
     }
   }
+
+  useEffect(() => {
+    setMovies([]); // Reset movies array
+    setPage(1); // Reset page number
+    setHasMore(true); // Reset hasMore state
+  }, [selectedGenre]);
 
   useEffect(() => {
     if (selectedGenre) {
@@ -103,7 +112,6 @@ export default function Home() {
             spacing={2}
             justifyContent="center"
           >
-            <Button variant="contained">Main call to action</Button>
             <AutocompleteFilter />
           </Stack>
         </Container>
@@ -129,8 +137,8 @@ export default function Home() {
       >
         <Container sx={{ py: 8 }} maxWidth="md">
           <Grid container spacing={4}>
-            {movies.map((movie) => (
-              <Grid item key={movie} xs={12} sm={6} md={4}>
+            {movies.map((movie, idx) => (
+              <Grid item key={idx} xs={12} sm={6} md={4}>
                 <MovieCard movie={movie} />
               </Grid>
             ))}
